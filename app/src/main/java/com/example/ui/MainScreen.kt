@@ -72,7 +72,7 @@ fun MainScreen(viewModel: MainViewModel) {
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Image(
-                            painter = painterResource(id = R.drawable.app_logo),
+                            painter = painterResource(id = R.drawable.ic_launcher_foreground_asset),
                             contentDescription = "ByteWatch Logo",
                             modifier = Modifier
                                 .size(32.dp)
