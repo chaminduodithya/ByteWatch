@@ -2,30 +2,56 @@ package com.example.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Primary & Brand Colors
-val ElectricBlue = Color(0xFF1976D2)
-val ElectricBlueLight = Color(0xFF63A4FF)
-val ElectricBlueDark = Color(0xFF004BA0)
+// Material Design 3 Palette Tokens - Light
+val M3LightPrimary = Color(0xFF1F52C4)
+val M3LightOnPrimary = Color(0xFFFFFFFF)
+val M3LightPrimaryContainer = Color(0xFFDCE1FF)
+val M3LightOnPrimaryContainer = Color(0xFF001551)
 
-val CyanAccent = Color(0xFF00B4D8)
-val CyanAccentLight = Color(0xFF90E0EF)
+val M3LightSecondary = Color(0xFF00677D)
+val M3LightOnSecondary = Color(0xFFFFFFFF)
+val M3LightSecondaryContainer = Color(0xFFB3EBFF)
+val M3LightOnSecondaryContainer = Color(0xFF001F28)
 
-// Metric Distinction Colors
-val DownloadColor = Color(0xFF00B0FF)
-val UploadColor = Color(0xFFFF9100)
-val TetheringColor = Color(0xFF9C27B0)
+val M3LightTertiary = Color(0xFF735600)
+val M3LightOnTertiary = Color(0xFFFFFFFF)
+val M3LightTertiaryContainer = Color(0xFFFFDF9E)
+val M3LightOnTertiaryContainer = Color(0xFF241A00)
+
+val M3LightBackground = Color(0xFFF8F9FF)
+val M3LightOnBackground = Color(0xFF191B23)
+val M3LightSurface = Color(0xFFF8F9FF)
+val M3LightOnSurface = Color(0xFF191B23)
+val M3LightSurfaceVariant = Color(0xFFE1E2EC)
+val M3LightOnSurfaceVariant = Color(0xFF44464F)
+
+// Material Design 3 Palette Tokens - Dark
+val M3DarkPrimary = Color(0xFFB7C4FF)
+val M3DarkOnPrimary = Color(0xFF002878)
+val M3DarkPrimaryContainer = Color(0xFF003BA3)
+val M3DarkOnPrimaryContainer = Color(0xFFDCE1FF)
+
+val M3DarkSecondary = Color(0xFF5CD6F6)
+val M3DarkOnSecondary = Color(0xFF003642)
+val M3DarkSecondaryContainer = Color(0xFF004E5F)
+val M3DarkOnSecondaryContainer = Color(0xFFB3EBFF)
+
+val M3DarkTertiary = Color(0xFFE9BF68)
+val M3DarkOnTertiary = Color(0xFF3D2E00)
+val M3DarkTertiaryContainer = Color(0xFF574100)
+val M3DarkOnTertiaryContainer = Color(0xFFFFDF9E)
+
+val M3DarkBackground = Color(0xFF11131B)
+val M3DarkOnBackground = Color(0xFFE2E2EC)
+val M3DarkSurface = Color(0xFF11131B)
+val M3DarkOnSurface = Color(0xFFE2E2EC)
+val M3DarkSurfaceVariant = Color(0xFF44464F)
+val M3DarkOnSurfaceVariant = Color(0xFFC5C6D0)
+
+// Semantic Metric Colors
+val DownloadColor = Color(0xFF0091EA)
+val UploadColor = Color(0xFFFF6D00)
+val TetheringColor = Color(0xFFAA00FF)
 val SuccessGreen = Color(0xFF00C853)
-
-// Dark Palette
-val DarkBackground = Color(0xFF0A1128)
-val DarkSurface = Color(0xFF131E3D)
-val DarkSurfaceVariant = Color(0xFF1C2A54)
-val DarkOnBackground = Color(0xFFEDF2F7)
-val DarkOnSurface = Color(0xFFE2E8F0)
-
-// Light Palette
-val LightBackground = Color(0xFFF5F7FB)
-val LightSurface = Color(0xFFFFFFFF)
-val LightSurfaceVariant = Color(0xFFE8EEF8)
-val LightOnBackground = Color(0xFF0F172A)
-val LightOnSurface = Color(0xFF1E293B)
+val WarningRed = Color(0xFFFF3B30)
+val WarningOrange = Color(0xFFFF9500)

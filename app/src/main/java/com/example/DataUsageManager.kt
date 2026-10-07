@@ -525,16 +525,17 @@ class DataUsageManager(private val context: Context) {
         val history = getDailyUsageHistory(networkType, subscriberId, daysToAudit)
         if (history.size <= 1) return 0L
 
-        // Exclude today (the last entry in history)
+        // Process past days sequentially from oldest to yesterday,
+        // accumulating surpluses and deducting deficits while clamping to 0.
         val pastDays = history.dropLast(1)
         var accumulatedPool = 0L
 
         for ((_, dayBytes) in pastDays) {
             val daySurplus = dailyLimitBytes - dayBytes
-            accumulatedPool += daySurplus
+            accumulatedPool = (accumulatedPool + daySurplus).coerceAtLeast(0L)
         }
 
-        return accumulatedPool.coerceAtLeast(0L)
+        return accumulatedPool
     }
 
     /**

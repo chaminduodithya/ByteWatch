@@ -8,45 +8,54 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = CyanAccent,
-    onPrimary = Color.Black,
-    primaryContainer = ElectricBlueDark,
-    onPrimaryContainer = CyanAccentLight,
-    secondary = ElectricBlueLight,
-    onSecondary = Color.Black,
-    tertiary = TetheringColor,
-    background = DarkBackground,
-    onBackground = DarkOnBackground,
-    surface = DarkSurface,
-    onSurface = DarkOnSurface,
-    surfaceVariant = DarkSurfaceVariant,
-    onSurfaceVariant = Color(0xFFCBD5E1)
+private val M3DarkColorScheme = darkColorScheme(
+    primary = M3DarkPrimary,
+    onPrimary = M3DarkOnPrimary,
+    primaryContainer = M3DarkPrimaryContainer,
+    onPrimaryContainer = M3DarkOnPrimaryContainer,
+    secondary = M3DarkSecondary,
+    onSecondary = M3DarkOnSecondary,
+    secondaryContainer = M3DarkSecondaryContainer,
+    onSecondaryContainer = M3DarkOnSecondaryContainer,
+    tertiary = M3DarkTertiary,
+    onTertiary = M3DarkOnTertiary,
+    tertiaryContainer = M3DarkTertiaryContainer,
+    onTertiaryContainer = M3DarkOnTertiaryContainer,
+    background = M3DarkBackground,
+    onBackground = M3DarkOnBackground,
+    surface = M3DarkSurface,
+    onSurface = M3DarkOnSurface,
+    surfaceVariant = M3DarkSurfaceVariant,
+    onSurfaceVariant = M3DarkOnSurfaceVariant
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = ElectricBlue,
-    onPrimary = Color.White,
-    primaryContainer = Color(0xFFD6E4FF),
-    onPrimaryContainer = ElectricBlueDark,
-    secondary = CyanAccent,
-    onSecondary = Color.White,
-    tertiary = TetheringColor,
-    background = LightBackground,
-    onBackground = LightOnBackground,
-    surface = LightSurface,
-    onSurface = LightOnSurface,
-    surfaceVariant = LightSurfaceVariant,
-    onSurfaceVariant = Color(0xFF475569)
+private val M3LightColorScheme = lightColorScheme(
+    primary = M3LightPrimary,
+    onPrimary = M3LightOnPrimary,
+    primaryContainer = M3LightPrimaryContainer,
+    onPrimaryContainer = M3LightOnPrimaryContainer,
+    secondary = M3LightSecondary,
+    onSecondary = M3LightOnSecondary,
+    secondaryContainer = M3LightSecondaryContainer,
+    onSecondaryContainer = M3LightOnSecondaryContainer,
+    tertiary = M3LightTertiary,
+    onTertiary = M3LightOnTertiary,
+    tertiaryContainer = M3LightTertiaryContainer,
+    onTertiaryContainer = M3LightOnTertiaryContainer,
+    background = M3LightBackground,
+    onBackground = M3LightOnBackground,
+    surface = M3LightSurface,
+    onSurface = M3LightOnSurface,
+    surfaceVariant = M3LightSurfaceVariant,
+    onSurfaceVariant = M3LightOnSurfaceVariant
 )
 
 @Composable
-fun MyApplicationTheme(
+fun ByteWatchTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
+    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -54,8 +63,8 @@ fun MyApplicationTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> M3DarkColorScheme
+        else -> M3LightColorScheme
     }
 
     MaterialTheme(
@@ -66,9 +75,18 @@ fun MyApplicationTheme(
 }
 
 @Composable
+fun MyApplicationTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    dynamicColor: Boolean = true,
+    content: @Composable () -> Unit
+) {
+    ByteWatchTheme(darkTheme = darkTheme, dynamicColor = dynamicColor, content = content)
+}
+
+@Composable
 fun SamsungTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    MyApplicationTheme(darkTheme = darkTheme, content = content)
+    ByteWatchTheme(darkTheme = darkTheme, dynamicColor = false, content = content)
 }

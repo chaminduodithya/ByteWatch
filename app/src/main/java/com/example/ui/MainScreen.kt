@@ -39,7 +39,6 @@ import com.example.R
 import com.example.data.UnitPreference
 import com.example.ui.components.UsageGauge
 import com.example.ui.theme.DownloadColor
-import com.example.ui.theme.SuccessGreen
 import com.example.ui.theme.TetheringColor
 import com.example.ui.theme.UploadColor
 
@@ -199,10 +198,10 @@ fun OverviewTabContent(
 
         // --- Network & Period Selector Card ---
         item {
-            Card(
+            ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.large,
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     // Mobile vs Wi-Fi Selector
@@ -241,7 +240,7 @@ fun OverviewTabContent(
 
                     Spacer(Modifier.height(12.dp))
 
-                    // Time Period Filter Tabs: Today, This Week, This Month, Custom
+                    // Time Period Filter Tabs
                     ScrollableTabRow(
                         selectedTabIndex = uiState.selectedPeriod.ordinal,
                         edgePadding = 0.dp,
@@ -272,10 +271,10 @@ fun OverviewTabContent(
 
         // --- Usage Gauge Card ---
         item {
-            Card(
+            ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.large,
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
                 Column(modifier = Modifier.padding(8.dp)) {
                     UsageGauge(
@@ -290,21 +289,29 @@ fun OverviewTabContent(
 
         // --- Smart Forecast Card ---
         item {
-            Card(
+            ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.large,
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
             ) {
                 Row(
                     modifier = Modifier.padding(20.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        Icons.Default.Analytics,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(36.dp)
-                    )
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surface,
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                Icons.Default.Analytics,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+                    }
                     Spacer(Modifier.width(16.dp))
                     Column {
                         Text(
@@ -351,10 +358,10 @@ fun OverviewTabContent(
 
         // --- Hotspot Card ---
         item {
-            Card(
+            ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.large,
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
                 Row(
                     modifier = Modifier
@@ -362,12 +369,20 @@ fun OverviewTabContent(
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        Icons.Default.WifiTethering,
-                        contentDescription = null,
-                        tint = TetheringColor,
-                        modifier = Modifier.size(28.dp)
-                    )
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                Icons.Default.WifiTethering,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                modifier = Modifier.size(22.dp)
+                            )
+                        }
+                    }
                     Spacer(Modifier.width(16.dp))
                     Column {
                         Text("Hotspot / Tethering", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
@@ -395,11 +410,13 @@ fun OverviewTabContent(
                     )
 
                     // CSV Export Button
-                    IconButton(onClick = {
+                    FilledTonalButton(onClick = {
                         val csv = viewModel.exportCsvData()
                         Toast.makeText(context, "Exported 30-day logs (${csv.lines().size} rows)", Toast.LENGTH_SHORT).show()
                     }) {
-                        Icon(Icons.Default.FileDownload, contentDescription = "Export CSV", tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.Default.FileDownload, contentDescription = "Export CSV", modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text("CSV", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
                 }
 
@@ -418,7 +435,7 @@ fun OverviewTabContent(
                             }
                         }
                     },
-                    shape = RoundedCornerShape(20.dp),
+                    shape = CircleShape,
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -478,12 +495,12 @@ fun AppUsageItemCard(
     val bgRatio = app.backgroundBytes.toDouble() / totalBytes.toDouble().coerceAtLeast(1.0)
     val isHighBgUsage = bgRatio > 0.20
 
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -500,14 +517,14 @@ fun AppUsageItemCard(
                             .clip(CircleShape)
                     )
                 } else {
-                    Box(
-                        modifier = Modifier
-                            .size(44.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primaryContainer),
-                        contentAlignment = Alignment.Center
+                    Surface(
+                        modifier = Modifier.size(44.dp),
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primaryContainer
                     ) {
-                        Icon(Icons.Default.Android, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(Icons.Default.Android, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        }
                     }
                 }
 
@@ -524,17 +541,16 @@ fun AppUsageItemCard(
 
                         if (isHighBgUsage) {
                             Spacer(Modifier.width(6.dp))
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .background(Color(0xFFFF3B30).copy(alpha = 0.15f))
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            Surface(
+                                color = MaterialTheme.colorScheme.errorContainer,
+                                shape = RoundedCornerShape(6.dp)
                             ) {
                                 Text(
                                     "High BG",
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = Color(0xFFFF3B30),
-                                    fontWeight = FontWeight.Bold
+                                    color = MaterialTheme.colorScheme.onErrorContainer,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                                 )
                             }
                         }
@@ -583,10 +599,10 @@ fun AppUsageItemCard(
 
 @Composable
 fun OneUICard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    Card(
+    ElevatedCard(
         modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         content()
     }
@@ -602,7 +618,15 @@ fun MetricCard(
 ) {
     OneUICard(modifier = modifier) {
         Column(modifier = Modifier.padding(20.dp)) {
-            Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(24.dp))
+            Surface(
+                shape = CircleShape,
+                color = color.copy(alpha = 0.15f),
+                modifier = Modifier.size(40.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(22.dp))
+                }
+            }
             Spacer(Modifier.height(12.dp))
             Text(title, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
@@ -626,6 +650,7 @@ fun PermissionCard(
             Button(
                 onClick = onClick,
                 shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(buttonText)

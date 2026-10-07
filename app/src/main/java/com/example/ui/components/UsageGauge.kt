@@ -3,21 +3,15 @@ package com.example.ui.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Savings
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -28,11 +22,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.DataUsageManager
-
-// Colors based on One UI specs
-val OneUIBlueGauge = Color(0xFF2C6BED)
-val WarningRedGauge = Color(0xFFFF3B30)
-val WarningOrangeGauge = Color(0xFFFF9500)
 
 @Composable
 fun UsageGauge(
@@ -47,11 +36,11 @@ fun UsageGauge(
     val isOverLimit = percentageRatio > 1.0
     val isNearLimit = percentageRatio >= 0.8 && !isOverLimit
 
-    // Gauge arc color shift: Warning Red if >100%, One UI Blue if normal
+    // Material 3 Gauge Colors
     val activeColor = when {
-        isOverLimit -> WarningRedGauge
-        isNearLimit -> WarningOrangeGauge
-        else -> OneUIBlueGauge
+        isOverLimit -> MaterialTheme.colorScheme.error
+        isNearLimit -> MaterialTheme.colorScheme.tertiary
+        else -> MaterialTheme.colorScheme.primary
     }
 
     val progressSweepRatio = percentageRatio.coerceIn(0.0, 1.0).toFloat()
@@ -71,21 +60,20 @@ fun UsageGauge(
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .aspectRatio(1.2f),
+                .fillMaxWidth(0.85f)
+                .aspectRatio(1.25f),
             contentAlignment = Alignment.Center
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
-                val strokeWidthPx = 18.dp.toPx()
+                val strokeWidthPx = 20.dp.toPx()
                 val diameter = size.minDimension - strokeWidthPx
                 val topLeftX = (size.width - diameter) / 2
                 val topLeftY = (size.height - diameter) / 2
 
-                // Arc geometry: 240 degrees sweep starting from 150 degrees (bottom-left)
                 val startAngle = 150f
                 val maxSweepAngle = 240f
 
-                // Draw background track arc
+                // Background track arc
                 drawArc(
                     color = trackColor,
                     startAngle = startAngle,
@@ -96,7 +84,7 @@ fun UsageGauge(
                     size = Size(diameter, diameter)
                 )
 
-                // Draw active progress arc
+                // Active progress arc
                 drawArc(
                     color = activeColor,
                     startAngle = startAngle,
@@ -108,18 +96,17 @@ fun UsageGauge(
                 )
             }
 
-            // Gauge Center Content
+            // Gauge Center Text Content
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 12.dp)
             ) {
-                // Render exact percentage (e.g. "103% of limit")
                 Text(
                     text = "$percentageInt% of limit",
-                    style = MaterialTheme.typography.headlineMedium.copy(fontSize = 28.sp),
+                    style = MaterialTheme.typography.displaySmall.copy(fontSize = 32.sp),
                     fontWeight = FontWeight.ExtraBold,
-                    color = if (isOverLimit) WarningRedGauge else MaterialTheme.colorScheme.onSurface,
+                    color = if (isOverLimit) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
 
@@ -130,81 +117,80 @@ fun UsageGauge(
 
                 Text(
                     text = "$formattedUsed / $formattedLimit",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Status Badge
-        val (badgeText, badgeBgColor, badgeTextColor) = when {
+        // Status Assist Badge
+        val (badgeText, badgeContainerColor, badgeContentColor) = when {
             isOverLimit -> {
                 val excess = usedBytes - limitBytes
                 Triple(
                     "+${DataUsageManager.formatBytes(excess, isBits)} over limit",
-                    WarningRedGauge.copy(alpha = 0.15f),
-                    WarningRedGauge
+                    MaterialTheme.colorScheme.errorContainer,
+                    MaterialTheme.colorScheme.onErrorContainer
                 )
             }
             isNearLimit -> {
                 val remaining = limitBytes - usedBytes
                 Triple(
                     "${DataUsageManager.formatBytes(remaining, isBits)} remaining (80%+ used)",
-                    WarningOrangeGauge.copy(alpha = 0.15f),
-                    WarningOrangeGauge
+                    MaterialTheme.colorScheme.tertiaryContainer,
+                    MaterialTheme.colorScheme.onTertiaryContainer
                 )
             }
             else -> {
                 val remaining = (limitBytes - usedBytes).coerceAtLeast(0L)
                 Triple(
                     "${DataUsageManager.formatBytes(remaining, isBits)} remaining",
-                    OneUIBlueGauge.copy(alpha = 0.12f),
-                    OneUIBlueGauge
+                    MaterialTheme.colorScheme.primaryContainer,
+                    MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }
 
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
-                .background(badgeBgColor)
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+        Surface(
+            color = badgeContainerColor,
+            shape = RoundedCornerShape(20.dp)
         ) {
             Text(
                 text = badgeText,
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
-                color = badgeTextColor
+                color = badgeContentColor,
+                modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp)
             )
         }
 
-        // Rollover Audit Banner
+        // Material 3 Rollover Audit Banner
         if (rolloverMessage.isNotBlank()) {
-            Spacer(modifier = Modifier.height(12.dp))
-            Card(
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)),
+            Spacer(modifier = Modifier.height(14.dp))
+            Surface(
+                color = MaterialTheme.colorScheme.secondaryContainer,
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         Icons.Default.Savings,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(22.dp)
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                        modifier = Modifier.size(24.dp)
                     )
-                    Spacer(Modifier.width(10.dp))
+                    Spacer(Modifier.width(12.dp))
                     Text(
                         text = rolloverMessage,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
             }

@@ -158,7 +158,8 @@ fun SettingsScreen(viewModel: MainViewModel) {
                     SegmentedButton(
                         selected = selectedUnit == UnitPreference.MB_GB,
                         onClick = { selectedUnit = UnitPreference.MB_GB },
-                        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
+                        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+                        icon = { SegmentedButtonDefaults.Icon(active = selectedUnit == UnitPreference.MB_GB) }
                     ) {
                         Text(
                             text = "Bytes (MB / GB)",
@@ -170,7 +171,8 @@ fun SettingsScreen(viewModel: MainViewModel) {
                     SegmentedButton(
                         selected = selectedUnit == UnitPreference.BITS_BYTES,
                         onClick = { selectedUnit = UnitPreference.BITS_BYTES },
-                        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
+                        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+                        icon = { SegmentedButtonDefaults.Icon(active = selectedUnit == UnitPreference.BITS_BYTES) }
                     ) {
                         Text(
                             text = "Bits (Mb / Gb)",
@@ -193,7 +195,8 @@ fun SettingsScreen(viewModel: MainViewModel) {
                     SegmentedButton(
                         selected = selectedTheme == AppThemePreference.SYSTEM,
                         onClick = { selectedTheme = AppThemePreference.SYSTEM },
-                        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3)
+                        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
+                        icon = { SegmentedButtonDefaults.Icon(active = selectedTheme == AppThemePreference.SYSTEM) }
                     ) {
                         Text(
                             text = "System",
@@ -205,7 +208,8 @@ fun SettingsScreen(viewModel: MainViewModel) {
                     SegmentedButton(
                         selected = selectedTheme == AppThemePreference.LIGHT,
                         onClick = { selectedTheme = AppThemePreference.LIGHT },
-                        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3)
+                        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
+                        icon = { SegmentedButtonDefaults.Icon(active = selectedTheme == AppThemePreference.LIGHT) }
                     ) {
                         Text(
                             text = "Light",
@@ -217,7 +221,8 @@ fun SettingsScreen(viewModel: MainViewModel) {
                     SegmentedButton(
                         selected = selectedTheme == AppThemePreference.DARK,
                         onClick = { selectedTheme = AppThemePreference.DARK },
-                        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3)
+                        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
+                        icon = { SegmentedButtonDefaults.Icon(active = selectedTheme == AppThemePreference.DARK) }
                     ) {
                         Text(
                             text = "Dark",
@@ -314,6 +319,7 @@ fun SettingsScreen(viewModel: MainViewModel) {
                     Toast.makeText(context, "Settings saved successfully!", Toast.LENGTH_SHORT).show()
                 },
                 shape = RoundedCornerShape(24.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp)
@@ -333,19 +339,27 @@ fun SettingsCard(
     icon: ImageVector,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Card(
+    ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
-                )
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            icon,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                }
                 Spacer(Modifier.width(12.dp))
                 Text(
                     title,

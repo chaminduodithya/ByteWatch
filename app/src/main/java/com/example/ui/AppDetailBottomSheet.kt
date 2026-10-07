@@ -6,7 +6,6 @@ import android.provider.Settings
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -23,25 +22,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
 import com.example.AppUsageInfo
 import com.example.DataUsageManager
-import com.example.ui.theme.DownloadColor
-import com.example.ui.theme.UploadColor
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppDetailBottomSheet(
     app: AppUsageInfo,
-    hourlyUsage: List<Pair<Int, Long>>, // List of 24 hours (0..23 -> bytes)
+    hourlyUsage: List<Pair<Int, Long>>,
     isBits: Boolean = false,
     onDismiss: () -> Unit
 ) {
@@ -69,7 +64,7 @@ fun AppDetailBottomSheet(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // App Icon & Name
+            // App Icon & Label Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -84,14 +79,14 @@ fun AppDetailBottomSheet(
                             .clip(CircleShape)
                     )
                 } else {
-                    Box(
-                        modifier = Modifier
-                            .size(56.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primaryContainer),
-                        contentAlignment = Alignment.Center
+                    Surface(
+                        modifier = Modifier.size(56.dp),
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primaryContainer
                     ) {
-                        Icon(Icons.Default.Android, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(Icons.Default.Android, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        }
                     }
                 }
 
@@ -112,7 +107,7 @@ fun AppDetailBottomSheet(
 
                 if (isHighBgUsage) {
                     Surface(
-                        color = Color(0xFFFF3B30).copy(alpha = 0.15f),
+                        color = MaterialTheme.colorScheme.errorContainer,
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Row(
@@ -122,14 +117,14 @@ fun AppDetailBottomSheet(
                             Icon(
                                 Icons.Default.Warning,
                                 contentDescription = null,
-                                tint = Color(0xFFFF3B30),
+                                tint = MaterialTheme.colorScheme.onErrorContainer,
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(Modifier.width(4.dp))
                             Text(
                                 ">20% BG",
                                 style = MaterialTheme.typography.labelMedium,
-                                color = Color(0xFFFF3B30),
+                                color = MaterialTheme.colorScheme.onErrorContainer,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -140,10 +135,10 @@ fun AppDetailBottomSheet(
             Spacer(Modifier.height(20.dp))
 
             // Total Consumed Banner
-            Card(
+            ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Row(
                     modifier = Modifier
@@ -178,10 +173,10 @@ fun AppDetailBottomSheet(
 
             // High BG Alert Banner
             if (isHighBgUsage) {
-                Card(
+                Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFF3B30).copy(alpha = 0.12f))
+                    color = MaterialTheme.colorScheme.errorContainer
                 ) {
                     Row(
                         modifier = Modifier.padding(16.dp),
@@ -190,14 +185,14 @@ fun AppDetailBottomSheet(
                         Icon(
                             Icons.Default.PriorityHigh,
                             contentDescription = null,
-                            tint = Color(0xFFFF3B30),
+                            tint = MaterialTheme.colorScheme.onErrorContainer,
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(Modifier.width(12.dp))
                         Text(
-                            "High background usage flag! This app consumed $bgPercent% of its total data while running in the background.",
+                            "High background usage! This app consumed $bgPercent% of its total data while running in the background.",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color(0xFFFF3B30),
+                            color = MaterialTheme.colorScheme.onErrorContainer,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
@@ -226,13 +221,13 @@ fun AppDetailBottomSheet(
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight((fgPercent.coerceAtLeast(1)).toFloat())
-                        .background(DownloadColor)
+                        .background(MaterialTheme.colorScheme.primary)
                 )
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight((bgPercent.coerceAtLeast(1)).toFloat())
-                        .background(UploadColor)
+                        .background(MaterialTheme.colorScheme.tertiary)
                 )
             }
 
@@ -247,7 +242,7 @@ fun AppDetailBottomSheet(
                         modifier = Modifier
                             .size(12.dp)
                             .clip(CircleShape)
-                            .background(DownloadColor)
+                            .background(MaterialTheme.colorScheme.primary)
                     )
                     Spacer(Modifier.width(6.dp))
                     Column {
@@ -261,7 +256,7 @@ fun AppDetailBottomSheet(
                         modifier = Modifier
                             .size(12.dp)
                             .clip(CircleShape)
-                            .background(UploadColor)
+                            .background(MaterialTheme.colorScheme.tertiary)
                     )
                     Spacer(Modifier.width(6.dp))
                     Column {
@@ -318,7 +313,7 @@ fun HourlyAppCanvasChart(
     hourlyUsage: List<Pair<Int, Long>>,
     isBits: Boolean = false
 ) {
-    val maxBytes = remember(hourlyUsage) {
+    val maxUsageBytes = remember(hourlyUsage) {
         hourlyUsage.maxOfOrNull { it.second }?.coerceAtLeast(1L) ?: 1L
     }
 
@@ -328,8 +323,8 @@ fun HourlyAppCanvasChart(
         if (selectedHourIndex in hourlyUsage.indices) {
             val (hour, bytes) = hourlyUsage[selectedHourIndex]
             val timeLabel = String.format(Locale.US, "%02d:00 - %02d:59", hour, hour)
-            Card(
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+            Surface(
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -355,7 +350,7 @@ fun HourlyAppCanvasChart(
         ) {
             val activeBarColor = MaterialTheme.colorScheme.primary
             val dimBarColor = activeBarColor.copy(alpha = 0.35f)
-            val selectedBarColor = Color(0xFFFF9500)
+            val selectedBarColor = MaterialTheme.colorScheme.tertiary
 
             Canvas(
                 modifier = Modifier
@@ -374,7 +369,7 @@ fun HourlyAppCanvasChart(
 
                 for (i in 0..23) {
                     val bytes = hourlyUsage.getOrNull(i)?.second ?: 0L
-                    val heightRatio = (bytes.toDouble() / maxBytes.toDouble()).toFloat().coerceIn(0.02f, 1.0f)
+                    val heightRatio = (bytes.toDouble() / maxUsageBytes.toDouble()).toFloat().coerceIn(0.02f, 1.0f)
                     val barHeight = size.height * heightRatio
                     val x = i * barWidthPx + spacingPx / 2
                     val y = size.height - barHeight

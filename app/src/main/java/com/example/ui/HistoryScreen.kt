@@ -23,7 +23,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.DataUsageManager
 import com.example.MainViewModel
 import com.example.data.UnitPreference
@@ -80,10 +79,10 @@ fun HistoryScreen(viewModel: MainViewModel) {
 
         // --- Controls: Network & Timeframe Filters ---
         item {
-            Card(
+            ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.large,
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text("Filter Network & Period", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
@@ -93,7 +92,8 @@ fun HistoryScreen(viewModel: MainViewModel) {
                         SegmentedButton(
                             selected = selectedNetworkType == ConnectivityManager.TYPE_MOBILE,
                             onClick = { selectedNetworkType = ConnectivityManager.TYPE_MOBILE },
-                            shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
+                            shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+                            icon = { SegmentedButtonDefaults.Icon(active = selectedNetworkType == ConnectivityManager.TYPE_MOBILE) }
                         ) {
                             Text(
                                 text = "Mobile Data",
@@ -105,7 +105,8 @@ fun HistoryScreen(viewModel: MainViewModel) {
                         SegmentedButton(
                             selected = selectedNetworkType == ConnectivityManager.TYPE_WIFI,
                             onClick = { selectedNetworkType = ConnectivityManager.TYPE_WIFI },
-                            shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
+                            shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+                            icon = { SegmentedButtonDefaults.Icon(active = selectedNetworkType == ConnectivityManager.TYPE_WIFI) }
                         ) {
                             Text(
                                 text = "Wi-Fi",
@@ -122,7 +123,8 @@ fun HistoryScreen(viewModel: MainViewModel) {
                         SegmentedButton(
                             selected = selectedDays == 7,
                             onClick = { selectedDays = 7 },
-                            shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
+                            shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+                            icon = { SegmentedButtonDefaults.Icon(active = selectedDays == 7) }
                         ) {
                             Text(
                                 text = "Last 7 Days",
@@ -134,7 +136,8 @@ fun HistoryScreen(viewModel: MainViewModel) {
                         SegmentedButton(
                             selected = selectedDays == 30,
                             onClick = { selectedDays = 30 },
-                            shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
+                            shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+                            icon = { SegmentedButtonDefaults.Icon(active = selectedDays == 30) }
                         ) {
                             Text(
                                 text = "Last 30 Days",
@@ -150,10 +153,10 @@ fun HistoryScreen(viewModel: MainViewModel) {
 
         // --- Comparison Highlights Banner ---
         item {
-            Card(
+            ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.large,
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Row(
@@ -168,7 +171,7 @@ fun HistoryScreen(viewModel: MainViewModel) {
                                 Icon(
                                     if (isMore) Icons.Default.TrendingUp else Icons.Default.TrendingDown,
                                     contentDescription = null,
-                                    tint = if (isMore) Color(0xFFFF3B30) else Color(0xFF00C853),
+                                    tint = if (isMore) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Spacer(Modifier.width(4.dp))
@@ -176,7 +179,7 @@ fun HistoryScreen(viewModel: MainViewModel) {
                                     text = if (diffPercent == 0) "Same as yesterday" else "${Math.abs(diffPercent)}% ${if (isMore) "more" else "less"} than yesterday",
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
-                                    color = if (isMore) Color(0xFFFF3B30) else Color(0xFF00C853)
+                                    color = if (isMore) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
@@ -206,10 +209,10 @@ fun HistoryScreen(viewModel: MainViewModel) {
 
         // --- Interactive Canvas Bar Chart ---
         item {
-            Card(
+            ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.large,
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Text(
@@ -281,8 +284,8 @@ fun InteractiveCanvasBarChart(
             val dateStr = SimpleDateFormat("EEEE, MMM d, yyyy", Locale.US).format(Date(ts))
             val usageStr = DataUsageManager.formatBytes(bytes, isBits)
 
-            Card(
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+            Surface(
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -308,7 +311,7 @@ fun InteractiveCanvasBarChart(
         ) {
             val activeColor = MaterialTheme.colorScheme.primary
             val dimColor = activeColor.copy(alpha = 0.35f)
-            val highlightColor = Color(0xFFFF9500)
+            val highlightColor = MaterialTheme.colorScheme.tertiary
 
             Canvas(
                 modifier = Modifier
@@ -389,10 +392,10 @@ fun DailyLogItem(
     val dateStr = SimpleDateFormat("EEEE, MMM d", Locale.US).format(Date(timestamp))
     val ratio = (bytes.toDouble() / maxUsageBytes.toDouble().coerceAtLeast(1.0)).toFloat().coerceIn(0f, 1f)
 
-    Card(
+    ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
